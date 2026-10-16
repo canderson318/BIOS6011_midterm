@@ -1,0 +1,54 @@
+{
+    "dat": [
+        {
+            "name": "Homework 1",
+            "score": "96 / 100",
+            "Mean": "98.39",
+            "Median": "100.75",
+            "High": "105",
+            "Upper Quartile": "105",
+            "Low": "77",
+            "Lower Quartile": "95.25"
+        },
+        {
+            "name": "Homework 2",
+            "score": "93.5 / 100",
+            "Mean": "97.79",
+            "Median": "99.5",
+            "High": "100",
+            "Upper Quartile": "100",
+            "Low": "90",
+            "Lower Quartile": "97.38"
+        },
+        {
+            "name": "Homework 3",
+            "score": "97 / 100",
+            "Mean": "99.34",
+            "Median": "100",
+            "High": "100",
+            "Upper Quartile": "100",
+            "Low": "96",
+            "Lower Quartile": "99.75"
+        },
+        {
+            "name": "Homework 4",
+            "score": "96.5 / 100",
+            "Mean": "98.93",
+            "Median": "100",
+            "High": "100",
+            "Upper Quartile": "100",
+            "Low": "91",
+            "Lower Quartile": "98"
+        },
+        {
+            "name": "Homework 5",
+            "score": "105 / 100",
+            "Mean": "101.14",
+            "Median": "104",
+            "High": "105",
+            "Upper Quartile": "105",
+            "Low": "88",
+            "Lower Quartile": "99.75"
+        }
+    ]
+}
