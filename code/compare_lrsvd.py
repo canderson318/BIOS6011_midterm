@@ -46,7 +46,7 @@ def compare(fc=3, ncps=(2, 5, 10, 20), lam=.1, rank_frac=.2, pcount=1e-5, col='q
         imputed[name] = f()
         secs[name] = time.time() - t
 
-    timed('pcount', lambda: s.P.clip(min=pcount))
+    timed('pcount', lambda: np.where(W, pcount, s.P))
     timed('soft_impute', lambda: soft_impute(s.P, W, rank=int(min(s.P.shape) * rank_frac), maxit=100,
                                              tol=1e-3, lam=lam)[1])
     for k in ncps:

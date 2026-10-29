@@ -74,12 +74,6 @@ print(scores)
 "
 ```
 
-`code/main.py` is written to be run interactively (Jupyter or an editor REPL), where the plots display:
-
-```bash
-uv run jupyter lab
-```
-
-Sweeps run in parallel with `multiprocess` (spawned workers, one BLAS thread each). To run `main.py` as a plain script, put its sweeps under `if __name__ == "__main__":`, otherwise the workers re-import and re-run it.
-
 Change the settings through arguments, for example `run(fc=2, zero_target=.7, lam=.05)` or `sweep('imp', {'lam': lams, 'rank_frac': ranks}, fc=2, seeds=range(20))`.
+
+Grid sweep runs in parallel with `multiprocess`. To run `main.py` as a plain script, put its sweeps under `if __name__ == "__main__":`, otherwise the workers re-import and re-run it.

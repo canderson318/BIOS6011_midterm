@@ -15,7 +15,7 @@ METRICS = ['spec', 'sens', 'fdr']
 def run(fc=3, lam=.1, pcount=1e-5, rank_frac=.2, maxit=100, tol=1e-3, col='p', alpha=.05, verbose=True, **sim_kw):
     """Simulate, impute zeros two ways, test each feature, and score.
     fc and any other simulate() argument (n, p, zero_target, alpha_sigma, ...) go to the simulation.
-    lam, rank_frac, maxit, tol configure soft_impute; pcount is the pseudocount for the comparison.
+    lam, rank_frac, maxit, tol configure soft_impute; pcount replaces the zeros (only the zeros) in the comparison.
     col is 'p' or 'q' and alpha the cutoff used to call a feature detected.
     Returns (sim, delta, results, scores).
     """
@@ -26,7 +26,7 @@ def run(fc=3, lam=.1, pcount=1e-5, rank_frac=.2, maxit=100, tol=1e-3, col='p', a
         print(f"Imputation: iter = {len(delta)}; SSE = {delta[-1]:.2e}; median imputed zero = {np.median(imp[W]):.2e}")
     res = {
         'imp': test_features(standardize(clr(imp)), s.groupA, s.is_effect),
-        'pcount': test_features(standardize(clr(s.P.clip(min=pcount))), s.groupA, s.is_effect),
+        'pcount': test_features(standardize(clr(np.where(W, pcount, s.P))), s.groupA, s.is_effect),
     }
     scores = pd.DataFrame({k: metrics(v, col, alpha) for k, v in res.items()}).T
     return s, delta, res, scores

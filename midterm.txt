@@ -1,0 +1,222 @@
+BIOS 6611 Midterm Project
+
+Overview
+This project is intended to give you practice with conducting a “rigorous” simulation study to examine some question or problem of interest. We have been
+applying simulations in lecture and homeworks throughout the semester. However, these examples are very targeted and brief. In this project you will work
+on a simulation problem that you propose, and then write a brief two-page
+summary report.
+For your chosen topic, you’ll prepare a 2-page summary (strict maximum; single
+spaced; at least 1 figure and 1 table must be in the 2-page limit; references can
+extend beyond the 2-page limit) in the form of a brief scientific report. Page
+2 includes an example outline with potential lengths for different sections to
+consider for your simulation study report.
+The rubric that will be used for grading available on the Canvas Midterm Project
+assignment, and is listed out on Page 3 of this document
+
+Some Potential Ideas:
+• Sample size calculation for a study where we do not have an easily accessible power calculator (e.g., non-inferiority study designs, equivalence
+study designs, risk ratio, chi-squared test, permutation t-test)
+• Theorem evaluation (e.g., central limit theorem under various distributions and sample sizes, other theorems you’ve seen in papers/textbooks/classes)
+• Compare methods (e.g., the exact versus asymptotic approaches for a
+given method, performance of a t-test vs. permutation t-test vs. chisquared test either for binary data or by coercing a continuous variable,
+compare asymptotic confidence intervals from a function’s output with
+bootstrap percentile confidence intervals)
+• Approximations for distributions (e.g., the Poisson approximation to the
+binomial)
+1
+
+• Taking any model or approach we’ve discussed and evaluating what happens when we violate our assumptions (e.g., how poorly does the t-test
+perform across various measures if we do not have normally distributed
+data)
+
+A few thoughts on simulation studies:
+• Remember, you get to set the “truth” that you are simulating from! You
+have the power to make things very subtle or extremely drastic.
+• When choosing scenarios, it can be helpful to fit one that meets the assumptions that you can compare to (e.g., simulating normal data for a
+t-test to compare to exponentially simulated data with the same mean).
+If you are comparing to a known theory (i.e., you have a reference or what
+should happen theoretically), you may be able to just reference that as
+your comparator. Although, it can still be useful (and fun) to confirm the
+theoretical properties via simulation!
+• Try to only “break” one part of the problem so you can better attribute
+why you are observing your results. If you change 3 things at once, it can
+be hard to know what specific choice on its own led to what you observe.
+• The “outcomes” you measure will depend on the question you are exploring via simulation. They may include the mean, median, bias, standard
+deviation, mean square error, relative efficiency, coverage, power, type I
+error rate, etc.
+
+Example Outline of Brief Scientific Report/Summary
+for Simulation Studies
+• Abstract – 0.2
+• Introduction with brief background – 0.2 page
+• Question to explore, motivating problem, theorem description – 0.3 page
+• Simulation set-up – 0.3 page
+• Results – 1 page
+– At least one plot
+– Tables summarizing either the simulation scenario(s) and/or results
+• Discussion and Conclusion – 0.25 page
+
+2
+
+• References (not included in 2-page limit)
+– You may not have any references for this project and that is okay.
+• Appendix for Reproducible Research Goal (not included in 2-page limit):
+– R code with clear comments
+
+Formatting Guidelines
+File Formats
+• Project should be submitted as pdfs or word documents
+Page Limits
+• An expected page length of at least 1.5 pages and no more than 2 pages.
+Font Size and Spacing
+• Use a standard font size and any standard font. Articles should be single
+spaced.
+Abstract and Keywords
+• A short abstract should describe the problem, data, and results.
+• Immediately after the abstract, provide a maximum of 5 keywords, avoiding general and plural terms and multiple concepts (avoid, for example,
+‘and’, ‘of’). These keywords will be used for indexing purposes.
+Tables and Figures
+• All tables and figures should be “publication ready” with informative titles
+and labels. Where applicable, units of measurement should be included.
+Variable names from code should be replaced with meaningful labels (e.g.,
+instead of “outcome_variable4” write the actual outcome).
+References
+• Any style of reference is acceptable as long as formatting is consistent.
+3
+
+Supplemental Materials
+• Given the small page limits, it is acceptable to include additional tables
+and figures beyond the required minimum of one table and one figure in a
+Supplemental Materials section if needed. These figures and tables should
+be referenced in the text as Figure S1, Table S1, etc.
+Reproducible Research Principles
+• An appendix with R, SAS, or other code should be included your references
+with code that is clearly commented for the simulations, analyses, figures,
+and tables ultimately included in the report. Code that was ultimately
+not used in the final report should be excluded from this appendix.
+• When grading, we will be running the provided code to verify the results
+you got within your project. This is a large portion of the overall project
+grade – so make sure you check that your code runs without error and
+produces the exact results you provide within the report.
+
+Grading Rubric
+Criteria
+
+Points
+
+Details
+
+Technical Requirements
+
+5
+
+Scientific Writing
+
+5
+
+Abstract
+Introduction/Background
+Section
+Motivating
+Problem/Theorem
+Explored/Question
+Examined
+Simulation Study
+Details
+
+5
+5
+
+Length (1.5-2 pages), single spacing,
+etc.
+More formal scientific writing style, not
+informal or casual writing
+Brief summary of project
+Background of simulation project being
+explored
+Clearly state the specific question being
+examined in your project
+
+Results: Table
+
+10
+
+Results: Figure
+
+10
+
+5
+
+10
+
+Detailed description of the simulation
+approach – should contain enough
+detail that someone could mimic the
+simulation by reading it
+Journal ready table of some component
+of the results
+Journal ready figure of some component
+of the results
+
+4
+
+Criteria
+
+Points
+
+Details
+
+Results
+
+5
+
+Discussion/Conclusion:
+Interpretation of
+Results
+Discussion/Conclusion:
+Limitations
+
+10
+
+Summary of the results of the
+simulation study
+Interpreting the results in context of
+the original question being examined
+
+Reproducible Research
+Principles
+
+25
+
+5
+
+Address the limitations of the
+simulation or the question being
+examined
+R code for all results clearly presented,
+with good commenting and seed clearly
+set. Should be able to easily run and
+get the same results as the project.
+
+Additional Resources
+Several additional resources are available under the Midterm Simulation Project
+– I have outlined them below:
+• A simulation study worksheet:
+– Completely optional but could be a helpful way to organize your
+thoughts when you are thinking through the topics
+• Project Example (The t-test and non-normal data: where did the power
+go?)
+– One example of what the midterm simulation project report could
+look like
+• RMD shell
+– An Rmarkdown shell that you can use to create your report
+– Note: you don’t have to use Rmarkdown for your report – I just
+provide this to help if you are using it
+• Various papers about writing scientific papers/simulations studies
+– Marie Davidian/NCSU simulation study slide deck
+– AJPH example of a brief report
+– Amstat – Tips on writing results for a scientific paper
+
+5
+
+
