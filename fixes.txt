@@ -1,0 +1,80 @@
+Criterion (pts): Technical requirements (5): 1.5–2 pages, single-spaced
+  Status: ❌
+  What's missing: The PDF is 5 pages. Page 1 is a cover and abstract page, pages 2–3 are the body, and a few lines of Discussion spill onto page 4
+  (numbered 3). Counting the cover/abstract page, you're at about 3 pages against a strict 2-page maximum. The abstract is meant to fit inside the 2
+  pages (the outline gives it 0.2 page). Drop the separate title page, put the abstract at the top of page 1, and cut text (see the notes below).
+  ────────────────────────────────────────
+  Criterion (pts): Scientific writing (5)
+  Status: ⚠️ 
+  What's missing: Several informal or broken spots: "I could have used alpha on it's own" (should be "its"), "Soft-imutation" (typo), "interesting
+  trend", "should show … around 1 as expected", and the stray Z after #bibliography(...). The Discussion sentence "better … than soft-imputation" is
+  circular, and "We assume the latter … missing values" lacks a period.
+  ────────────────────────────────────────
+  Criterion (pts): Abstract (5)
+  Status: ❌
+  What's missing: The Results and Conclusions lines are still XXX. It should describe the problem, data and results. The date line "By: …" is fine.
+  ────────────────────────────────────────
+  Criterion (pts): Keywords
+  Status: ✅
+  What's missing: You have 4, and the limit is 5. Check that "Dirichlet-Multinomial" counts as one concept.
+  ────────────────────────────────────────
+  Criterion (pts): Introduction/Background (5)
+  Status: ✅
+  What's missing: It's solid but long. This is where to trim for the page limit (the outline gives 0.2 page).
+  ────────────────────────────────────────
+  Criterion (pts): Question explored (5)
+  Status: ✅
+  What's missing: The "Explored Question" subsection states the question and hypothesis. Consider making it one sentence, with the fc range stated.
+  ────────────────────────────────────────
+  Criterion (pts): Simulation details (10)
+  Status: ⚠️ 
+  What's missing: It's mostly mimic-able. Still missing: (a) a parameter table (the old Table 1 is gone, so zero_target = 0.5, effect_frac, max_zero,
+  and the sweep grids (λ 0.01–0.9, 10 values; rank 0.01–0.9; pseudocount 1e-8–1e-2, 30 values) aren't stated); (b) the seeds (5 in the grid search,
+  which I haven't seen written down); (c) the fc sweep settings (100 values in 0–10, effect_frac = .1 vs 1% in the grid search, inconsistent with the
+   text, which only says "a subset"); (d) how the Dirichlet concentration is chosen to hit a 50% zero fraction.
+  ────────────────────────────────────────
+  Criterion (pts): Results: table (10)
+  Status: ⚠️ 
+  What's missing: The two best-setting tables exist but are 0.5em text with no header grouping. They need clear units/labels, and the best-per-method
+  comparison could be one combined table. out/table.csv (the fc ≈ 0 null check) isn't used anywhere.
+  ────────────────────────────────────────
+  Criterion (pts): Results: figure (10)
+  Status: ⚠️ 
+  What's missing: You have 3 figures, which is too many for 2 pages. Each needs axis labels with plain names, panel labels, and a legend description.
+  Move the two grid-search figures to the supplement (as Figure S1 and S2) and keep sens_fdr_fc.pdf. The pseudocount figure is also stale (it 
+  predates the zero-only fix), so regenerate it.
+  ────────────────────────────────────────
+  Criterion (pts): Results summary (5)
+  Status: ⚠️ 
+  What's missing: The text is there but wordy, and has inconsistencies. "should show an FDR and sensitivity of zero around 1" is wrong as written: at
+  fc = 1 there are no true effects, so sensitivity is undefined and FDR is just the chance of any discovery. "soft-imputation's FDR stays 
+  significantly lower" has no test. Note also that the FDR for soft imputation (0.052) exceeds 0.05, which comes from your optim_i rule (see below).
+  ────────────────────────────────────────
+  Criterion (pts): Discussion: interpretation (10)
+  Status: ❌
+  What's missing: It's only 1½ sentences. It also contradicts the results: it says soft imputation has "higher sensitivity", but your numbers are 0.15
+  
+  against 0.17 for the pseudocount. It needs to state whether the hypothesis was supported and why (for example, detected features have no zeros, so
+  imputation can't help them), and end with a conclusion.
+  ────────────────────────────────────────
+  Criterion (pts): Discussion: limitations (5)
+  Status: ❌
+  What's missing: The placeholder text is just the prompt copied in. Write it out: a single generative model, zeros come only from sampling, one
+  fold-change/effect-fraction/sparsity setting for tuning, tuning on the same simulation as the test, and low overall power. Add next steps.
+  ────────────────────────────────────────
+  Criterion (pts): Reproducible code (25)
+  Status: ❌
+  What's missing: The appendix is an empty code block with a TODO. Every script has to go in (sim.py, impute.py, process.py, pipeline.py, main.py).
+  Exclude unused code (compare_lrsvd.py and 01.py are not in the report). Seeds must be stated explicitly. main.py has no if __name__  == "__main__":
+   guard, so the spawn workers re-run it, and the grader will run it. It also has the from re import L leftover import and a hard-coded
+  os.chdir(Path.home() / ...) that won't exist on the grader's machine.
+    
+  A few other things the grader will trip on or see:
+  - Selection rules: the Methods text says each best setting is "the highest sensitivity among settings with FDR < 0.05". optim_i uses the lowest FDR
+    instead, so it doesn't match, and it gives FDR = 0.052 (not under 0.05). Use the same rule for both, or change the text.
+  - Seeds in the fc sweep: seed = seeds (a list) passes a single combined seed rather than replicates, and run(... seed=np.arange(100)) at the end
+    does the same. Say what's intended and state it.
+  - Unreferenced table and stray content: the "Table 2" TODO is gone, but nothing in the text refers to the null-effect check. @itab/@ptab are used.
+    The two sentences about 1 in the fc paragraph should be reworded as above.
+  - The Typst Z: #bibliography(...)Z prints a literal "Z" in the PDF.
+  - Supplement: if you move figures there, the guidelines want them labelled Figure S1 and Table S1 and referenced in the text.

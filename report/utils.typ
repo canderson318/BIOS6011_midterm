@@ -7,17 +7,17 @@
   // Document Settings
   ////////////////////
   let fntsz = 11pt
-  let after = fntsz * 1
+  let after =fntsz
   set page(margin: .5in, width: 8.5in, height: 11in, numbering: "1")
   set columns(gutter: fntsz)
   set text(font: "Georgia", size: fntsz)
-  set par(leading:  0.45em, spacing: 1em, justify: true)
+  set par(leading:  0.45em, spacing: 0.45em, justify: true)
 
   ////////////////
   // Set Defaults
   ////////////////
 
-  show math.equation: set text(size: 12pt)
+  // show math.equation: set text(size: 12pt)
 
   show title: it => {
     set align(center + horizon)
@@ -33,7 +33,8 @@
   }
 
   show link: it => {
-    set text(blue)
+    // set text(blue)
+    set text(black, weight:"bold")
     it
   }
 
@@ -47,9 +48,9 @@
     }
   }
 
-  show heading: it => {
-    block(below: after)[#it]
-  }
+  // show heading: it => {
+  //   block(above: 0.45em, below: after)[#it]
+  // }
   show figure.where(kind: "code"): it => {
     // let col = rgb("#2746e397")
     // block(fill: none, stroke: col, inset: 8pt,below:5pt, radius: 20pt, width: 100%)[
@@ -59,6 +60,18 @@
       #it.body
     ]
     v(-1em)
+    it.caption
+  }
+
+  show figure: it => {
+    // let col = rgb("#2746e397")
+    // block(fill: none, stroke: col, inset: 8pt,below:5pt, radius: 20pt, width: 100%)[
+    //     #it.body
+    // ]
+    block[
+      #it.body
+    ]
+    v(-.3em)
     it.caption
   }
 

@@ -23,7 +23,7 @@ def soft_impute(X, W, maxit=50, rank=10, lam=.1, tol=1e-3, early_stop=True, cap=
         u, s, vt = np.linalg.svd(L - mu, full_matrices=False)
         s_ = np.maximum(s - lam * s[0], 0)
         return mu + (u[:, :rank] * s_[:rank]) @ vt[:rank]
-    logX = np.log(np.where(W, 1, X))  # masked entries are placeholders
+    logX = np.log(np.where(W, 1, X))
     col_min = np.nanmin(np.where(W, np.nan, logX), axis=0)  # log of the smallest observed value per column
     Z = _reconstruct(np.where(W, col_min - np.log(2), logX))  # initial fill with min - log(2) -> min/2
     if cap:

@@ -45,10 +45,12 @@ Dependencies are in `uv.lock`.
 ## Setup
 
 ```bash
-git clone <repo-url> && cd midterm
+git clone https://github.com/canderson318/BIOS6011_midterm.git && cd midterm
 # create .venv 
 uv sync --locked      
 ```
+
+Change `wd` to your working directory within `BIOS6011_midterm`.
 
 ## Layout
 
@@ -59,11 +61,11 @@ uv sync --locked
 | `code/process.py` | `clr`, `standardize`, per-feature t-tests (`test_features`), and sensitivity/specificity/FDR (`metrics`) |
 | `code/pipeline.py` | `run()` for one simulation, and `sweep()` to score a grid of settings over seeds in parallel |
 | `code/main.py` | Tuning sweeps for the pseudocount and for `lam` and `rank_frac`, with plots |
-| `code/compare_lrsvd.py` | Compares `soft_impute` to R's `zCompositions::lrSVD` through rpy2 (slow) |
+| `code/other/compare_lrsvd.py` | Compares `soft_impute` to R's `zCompositions::lrSVD` through rpy2 (slow) |
 
 ## Running
 
-One simulation, scored for both methods:
+One simulation scored for both methods:
 
 ```bash
 uv run python -c "
