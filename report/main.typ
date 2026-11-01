@@ -18,17 +18,15 @@
     #set text(size: 9pt)
     #underline[*Abstract.*]
     *Background:* Compositional data, such as gut metagenomic relative abundances, lie on a simplex and contain spurious correlations that analyses assuming Euclidean geometry do not account for, so they are usually transformed with the centered log-ratio (CLR). The CLR is undefined at zero, yet biological compositions are sparse (often more than 50% zeros), and these zeros are often due to technical effects such as limited sampling depth (left-censoring). They must therefore be replaced before the transformation.
-    *Methods:* I compared replacing zeros with a small constant (a pseudocount) to imputing them with SVD-based soft imputation. I simulated Dirichlet-multinomial count data ($n = 100$ samples, $p = 5000$ features) with a group effect multiplied to a subset of features, tuned each method over a grid of its parameters, and compared sensitivity (power) at a false discovery rate (FDR) below 0.05 from per-feature t-tests on the CLR-transformed data.
-    *Results:* At a fold change of 5, the best pseudocount ($3.3 times 10^(-5)$) had a sensitivity of 0.17 at an FDR of 0.04, and the best soft imputation settings ($lambda = 0.12$, rank fraction $= 0.90$) had a sensitivity of 0.15 at an FDR of 0.05. Across fold changes from 0 to 10, the sensitivity and FDR curves of the two methods were indistinguishable.
-    *Conclusions:* In this sparse simulation with few differential features, soft imputation gave no advantage in sensitivity or FDR over a tuned pseudocount, so the hypothesis was not supported. Power was low for both methods.
+    *Methods:* I compared replacing zeros with a small constant (a pseudocount) to imputing them with SVD soft-imputation. I simulated Dirichlet-multinomial count data with a group effect on a subset of features and tuned each method over a grid of its parameters. I then compared sensitivity (power) at a false discovery rate (FDR) below (or at least near) 0.05 from per-feature t-tests on the CLR-transformed data.
+    *Results:* At a fold change of 5, the best pseudocount ($3.3 times 10^(-5)$) had a sensitivity of 0.17 at an FDR of 0.04, and the best soft imputation settings ($lambda = 0.12$, rank fraction $= 0.90$) had a sensitivity of 0.15 at an FDR of 0.052. Across fold changes from 0 to 10, the sensitivity of both methods rose and plateaued around 0.2 by $"fc" approx 5$ and FDR stayed at or below about 0.05 for both.
+    *Conclusions:* In this sparse simulation with few differential features, soft imputation gave no advantage in sensitivity or FDR over a tuned pseudocount, so the hypothesis was not supported. Power was low for both methods in these initial tests, but further comparisons are needed at different parameter settings, specifically testing with more differential features and varying sparsity.
     #underline[*Keywords.*] Compositional Data, Zero Imputation, Centered Log-Ratio, Dirichlet-Multinomial
   ]
 ]
 
 = Introduction
-Compositional data lie on the simplex.
-This means values are between 0 and 1 and sum to 1 within each observation, so when one feature rises, others must fall.
-Thus, spurious negative correlations can arise, for example, if the first value of $[0.8, 0.1, 0.1]$ decreases to $0.6$, the others must rise to $[0.2, 0.2]$, which makes the first feature appear negatively correlated with the other two.
+Compositional data lie on the simplex, meaning values are between 0 and 1 and sum to 1 within each observation; when one feature rises, others must fall so spurious negative correlations can arise.
 Transforming the data from the simplex (Aitchison space) to Euclidean space avoids this and allows standard tools such as the t-test and PCA.
 The most common transformation is the centered log-ratio (CLR), which centers log abundances on their geometric mean @Hron2010-ln:
 $ "clr"(x_j) = log(x_j) - "mean"(log(x)) $
@@ -55,7 +53,7 @@ I simulate with the zeros built in instead of adding them artificially, as this 
 The simulation step also uses many parameters, so I use a grid search to identify the best ones for each method.
 
 *Generative Model.*
-Counts are modeled by sampling probability vectors, $theta$, from a Dirichlet distribution which is each sample's true composition.
+Counts are modeled by sampling probability vectors, $theta$, from a Dirichlet distribution which is each sample's true composition @Zamzami2019-op.
 For each sample, I sample a Multinomial $N_i$ times from that sample's probability vector, $theta_i$, simulating a realistic sequencing depth library size which varies across samples.
 This step also introduces zeros by chance and the fixed library size means counts are negatively correlated by construction (as a feature that gets more draws leaves fewer for others).
 The library sizes $N$ are sampled from a Log-Normal with a log-scale mu (median) and sd (multiplicative).
@@ -64,7 +62,7 @@ I then convert the simulated counts to relative abundance by dividing each sampl
 *Parameters.*
 I simulated $n = 100$ samples (50 per group) and $p = 5000$ features.
 The mean composition $m$ was drawn from a log-normal distribution (log-scale mean 0, sd 1.5) and normalized to sum to 1, and the Dirichlet parameter was $alpha = m dot "concentration"$.
-The concentration controls the variation between samples, that is, how tightly samples cluster around $m$.
+The concentration controls the variation between samples, that is, how tightly samples cluster around $m$ @UnknownUnknown-qm @UnknownUnknown-mk.
 Without concentration, features were more variable and sparse.
 // it was solved numerically (root finding on a gamma-Poisson approximation of the mean probability of a zero) so that about 50% of counts were zero before filtering.
 Library sizes $N_i$ had a median of $10^6$ reads and a log-scale sd of $ln(2)/2$, a 2-fold range.
@@ -207,7 +205,9 @@ Next steps are to vary the fraction of differential features, the sample size an
 
 == Code
 
-Code is available on my Github here -> #link("https://github.com/canderson318/BIOS6011_midterm", image("github.svg", height: .9em))
+Code is available on my #link("https://github.com/canderson318/BIOS6011_midterm","Github").
+
+
 ```python
 
 # ———— code/impute.py
