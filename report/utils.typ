@@ -43,7 +43,7 @@
       set text(baseline: 0em, size: 1em, weight: "bold")
       it
     } else {
-      set text(baseline: -.11em, size: .8em)
+      // set text(baseline: -.11em, size: 1em)
       it
     }
   }
