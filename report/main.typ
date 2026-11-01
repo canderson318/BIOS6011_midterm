@@ -11,10 +11,10 @@
 // Strict maximum of 2 pages (aim for 1.5-2), single spaced, including at least 1 table and 1 figure; references, supplemental material, and the appendix do not count. Use a formal scientific writing style (the README wording is informal in places).
 
 #counter(page).update(0)
-#set page(numbering:none)
+#set page(numbering: none)
 #title[Comparison Between Pseudocount and Soft-Imputation Left-censored Zero Handling]
 #align(center)[By: Christian Anderson\ #today.display("[day] [month repr:long] [year]")]
-#align(center,	link("https://github.com/canderson318/BIOS6011_midterm",	image("github.svg", height: 1em)))
+#align(center, link("https://github.com/canderson318/BIOS6011_midterm", image("github.svg", height: 1em)))
 #underline[*Abstract.*]
 *Background:* Compositional data, such as gut metagenomic relative abundances, lie on a simplex and contain spurious correlations that analyses assuming Euclidean geometry do not account for, so they are usually transformed with the centered log-ratio (CLR). The CLR is undefined at zero, yet biological compositions are sparse (often more than 50% zeros), and these zeros are often due to technical effects such as limited sampling depth (left-censoring). They must therefore be replaced before the transformation.
 *Methods:* I compared replacing zeros with a small constant (a pseudocount) to imputing them with SVD-based soft imputation. I simulated Dirichlet-multinomial count data ($n = 100$ samples, $p = 5000$ features) with a group effect multiplied to a subset of features, tuned each method over a grid of its parameters, and compared sensitivity (power) at a false discovery rate (FDR) below 0.05 from per-feature t-tests on the CLR-transformed data.
@@ -28,8 +28,8 @@ Compositional Data, Zero Imputation, Centered Log-Ratio, Dirichlet-Multinomial
 
 
 #pagebreak()
-#set page(numbering:"1")
-#set page(columns:2)
+#set page(numbering: "1")
+#set page(columns: 2)
 
 = Introduction
 Compositional data lie on the simplex: each value is between 0 and 1, and the values for each observation sum to 1.
@@ -77,11 +77,11 @@ This step also introduces zeros by chance and the fixed library size means count
 The library sizes $N$ are a simple sample from a Log-Normal with a log-scale mu (median) and sd (multiplicative).
 
 $
-	X_i tilde "Multinomial"(N_i, theta_i)
-	\ theta_i tilde "Dirichlet"(alpha)
-	\ N_i tilde "lognormal"(mu, sigma)
-	\ P_(i j) = X_(i j) / (sum_(k=1)^p X_(i k))
-	\ "where" X in NN^(n times p), quad i = 1, dots, n, quad "and" quad j = 1, dots, p
+  X_i tilde "Multinomial"(N_i, theta_i)
+  \ theta_i tilde "Dirichlet"(alpha)
+  \ N_i tilde "lognormal"(mu, sigma)
+  \ P_(i j) = X_(i j) / (sum_(k=1)^p X_(i k))
+  \ "where" X in NN^(n times p), quad i = 1, dots, n, quad "and" quad j = 1, dots, p
 $
 
 
@@ -94,7 +94,8 @@ Features that were zero in at least 90% of samples were removed (a prevalence fi
 
 *Effect.*
 For samples in group A, the probability $theta_(i j)$ of each differential feature was multiplied by the fold change $"fc"$ and each $theta_i$ was renormalized to sum to 1; group B was unchanged.
-The effect is increases group A features and the renormalization shifts all other features down slightly as a result.
+For the parameter sweep, I arbitrarily chose a $"fc"$ of 5.
+This effect increases group A features and the renormalization shifts all other features down slightly as a result.
 
 *Zero handling.*
 For the pseudocount, every zero in the relative abundances $P$ was replaced by a constant $c$ and nonzero entries were left unchanged.
@@ -107,33 +108,79 @@ Both methods were followed by the CLR transform.
 *Testing and evaluation.*
 For each feature I ran a two-sample t-test between the groups on the CLR values, adjusted the p-values with the Benjamini-Hochberg procedure and labeled features with $q < 0.05$ as discovery.
 Because the differential features are known, I computed sensitivity $= "TP" / ("TP" + "FN")$, specificity $= "TN" / ("TN" + "FP")$, and FDR $= "FP" / ("TP" + "FP")$.
-In the grid searches these were averaged over five simulation seeds, and the best setting of each method was the one with the highest sensitivity among settings with FDR < 0.05.
+In the grid searches these were averaged over five simulation seeds, and the best setting of each method was the one with the highest sensitivity among settings with FDR < 0.05 or the lowest FDR.
 The two methods were then compared at their best settings across fold changes, with one simulated dataset per fold change.
 
 = Results
 
 
-#TODO[Table 2 (journal-ready): sensitivity, specificity, and FDR for each method at its best setting, with an informative title and units. Use meaningful labels, not code names (e.g. "Sensitivity", not `sens`).]
-#TODO[Figures: replace code names on the axes, colorbars, and captions (`sens`, `fdr`, `pcount`, `lam`, `rank_frac`, `value`) with readable labels (Sensitivity, FDR, pseudocount, $lambda$, rank fraction). Captions should state what is plotted and the simulation settings (e.g. $"fc"$, seeds). Extra figures and tables go in Supplemental Materials as Figure S1, Table S1, etc.]
+#let col-names = (
+  pcount: "Pseudocount",
+  lam: "Lambda",
+  rank_frac: "Rank Fraction",
+  sens: "Sensitivity",
+  spec: "Specificity",
+  fdr: "FDR",
+)
+// One-row csv (header + values) -> table with full, bold, title-case headers
+#let optim-table(path, caption) = {
+  let t = csv(path)
+  let cell(v, h) = if v in ("", "NaN", "nan") { [--] } else if h == "pcount" {
+    fmt-num(float(v), format: "e")
+  } else { fmt-num(float(v), decimals: 3) }
+  figure(
+    table(inset:  2pt,
+      columns: (1fr,) * t.at(0).len(),
+      table.header(..t.at(0).map(h => [*#col-names.at(h, default: h)*])),
+      ..t.at(1).zip(t.at(0)).map(((v, h)) => cell(v, h)),
+    ),
+    caption: caption,
+  )
+}
 
-#align(center,figure(image("../out/imp_sens_fdr_scatter.pdf", width: 60%),caption:[Soft imputation grid search over $lambda$ and rank.]))
-#align(center,figure(image("../out/pcount_sens_fdr_scatter.pdf", width: 60%),caption:"Pseudocount grid search."))
-#align(center,figure(image("../out/sens_fdr_fc.pdf", width: 60%),caption:"Pcount and soft imputation FDR versus sensitivity (power)."))
+
+#align(center)[#figure(
+  image("../out/imp_sens_fdr_scatter.pdf", width: 60%),
+  caption: [Soft imputation grid search over $lambda$ and rank.],
+)<igrid>]
+
+#align(center)[#figure(
+  image("../out/pcount_sens_fdr_scatter.pdf", width: 60%),
+  caption: "Pseudocount grid search.",
+)<pgrid>]
+
+#text(.5em)[
+  #optim-table("../out/optim_i.csv", [Best soft imputation settings.])<itab>
+  #optim-table("../out/optim_p.csv", [Best pseudocount (highest sensitivity with FDR < 0.05).])<ptab>
+]
+
+#align(center, figure(
+  image("../out/sens_fdr_fc.pdf", width: 60%),
+  caption: "Pcount and soft imputation FDR/sensitivity versus effect fold-change.",
+))
+
+Few values resulted in an FDR < 0.05 for both soft imputation (@igrid) and pseudocount (@pgrid) and there doesn't appear to be a relationship between these parameters and performance for either (spearman partial-correlation q-values > .05).
+At $"fc" = 5$, the optimal pseudocount was 3.3e-05 which achieved a sensitivity of 0.17 (FDR < 0.05) (@ptab), and the optimal soft imputation parameters were $lambda = 0.122$ and $"rank fraction" = 0.90$ which had a sensitivity of 0.15 and did not have a FDR less than the threshold (FDR = 0.052) (@itab).
+Iterating over multiple fold change values (100 values between 0 and 10), both methods should show an FDR and sensitivity of zero around 1 as expected because there is no difference between groups (null effect).
+The lines show an interesting trend where both FDR and sensitivity increase moving away from 1.
+Soft-imutation's FDR is less than pseudocount's for $"fc" < 1$ but greater for $"fc" > 1$.
+As $"fc"$ increase, the difference in pseudocount's and soft-imputation's FDR becomes more pronounced with soft-imputation's staying significantly lower while sensitivity remains consistently similar between both.
 
 = Discussion
-#TODO(title: "TODO (10 pts)")[Interpretation: interpret the results in the context of the original question. Was the hypothesis supported, and why do the methods differ or not? End with a conclusion.]
-#TODO(title: "TODO (5 pts)")[Limitations of the simulation or of the question examined (single data-generating model, how the zeros arise, the range of fold changes, the effect size and sparsity values explored, and tuning on the same simulation model), and next steps.]
 
-= References
-#bibliography(title:"References", "refs.bib", style:"nature")
+Using the best possible case for each method given my setup I reject my hypothesis that soft-imputation is better at filling zeros because it has a lower FDR and higher sensitivity and thus retains group signal better than soft-imputation. My simulation
 
-#set page(columns:1)
-= Supplemental Materials
-#TODO[Optional extra figures and tables (Figure S1, Table S1, ...), each referenced in the text.]
+Limitations of the simulation or of the question examined (single data-generating model, how the zeros arise, the range of fold changes, the effect size and sparsity values explored, and tuning on the same simulation model), and next steps.
 
+#bibliography(title: "References", "refs.bib", style: "nature")
+
+
+#set page(columns: 1)
 = Appendix
 == Code
-#TODO(title: "TODO (25 pts)")[Reproducibility: include the code for every simulation, analysis, figure, and table in the report, with clear comments, and exclude unused code. State the random seed(s) explicitly. The code will be run by the grader, so check that it runs without error from a clean environment and gives exactly the numbers in the report. The assignment names R or SAS but allows other code.]
+#TODO(
+  title: "TODO (25 pts)",
+)[Reproducibility: include the code for every simulation, analysis, figure, and table in the report, with clear comments, and exclude unused code. State the random seed(s) explicitly. The code will be run by the grader, so check that it runs without error from a clean environment and gives exactly the numbers in the report. The assignment names R or SAS but allows other code.]
 ```python
 
 ```
